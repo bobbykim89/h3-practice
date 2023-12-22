@@ -1,0 +1,42 @@
+{
+  "name": "h3-practice",
+  "version": "0.0.1",
+  "description": "simple practice project for h3",
+  "main": "index.ts",
+  "scripts": {
+    "develop": "nodemon --inspect ./src/index.ts",
+    "bundle:watch": "webpack --watch",
+    "watch:dist": "concurrently \"webpack --watch\" \"nodemon ./dist/main.js\"",
+    "build:dev": "webpack --config webpack.config.js",
+    "build:prod": "webpack --config webpack.config.prod.js",
+    "serve:dist": "nodemon ./dist/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "h3"
+  ],
+  "author": "Bobby Kim",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.6",
+    "@babel/node": "^7.22.19",
+    "@babel/preset-env": "^7.23.6",
+    "@types/node": "^20.10.5",
+    "@types/nodemon": "^1.19.6",
+    "concurrently": "^8.2.2",
+    "esm": "^3.2.25",
+    "nodemon": "^3.0.2",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "h3": "^1.9.0"
+  }
+}
