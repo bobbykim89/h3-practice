@@ -1,33 +1,31 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 const BundleAnalyzerPlugin =
-  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+  require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
-  mode: "development",
-  target: "node",
-  entry: {
-    bundle: path.resolve(__dirname, "src/index.ts"),
-  },
+  mode: 'development',
+  target: 'node',
+  entry: path.resolve(__dirname, 'src/index.ts'),
   module: {
     rules: [
       {
         test: /\.ts$/,
-        use: "ts-loader",
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src/"),
+      '@': path.resolve(__dirname, 'src/'),
     },
-    extensions: [".ts", ".js"],
+    extensions: ['.ts', '.js'],
   },
   output: {
-    path: path.resolve(__dirname, "dist/"),
-    publicPath: "/",
-    filename: "main.js",
+    path: path.resolve(__dirname, 'dist/'),
+    publicPath: '/',
+    filename: 'main.js',
     clean: true,
   },
   optimization: {
@@ -36,4 +34,4 @@ module.exports = {
   externalsPresets: { node: true },
   externals: [nodeExternals()],
   plugins: [new BundleAnalyzerPlugin()],
-};
+}
