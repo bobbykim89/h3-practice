@@ -1,32 +1,37 @@
-import { H3Event, EventHandlerRequest, getRouterParams } from "h3";
-import path from "node:path";
-import { readFileSync } from "node:fs";
-
-const POST_PATH = "./src/db/posts.json";
-
-const postList = (): [] => {
-  const posts = readFileSync(path.resolve(POST_PATH), {
-    encoding: "utf-8",
-  });
-  const parsedData: [] = JSON.parse(posts).data;
-  return parsedData;
-};
+import {
+  H3Event,
+  EventHandlerRequest,
+  getRouterParams,
+  createError,
+  getRouterParam,
+} from 'h3'
+import { Post } from '@/model'
 
 export class PostController {
-  public getAllPost() {
-    const allPost = postList();
-    return allPost;
-  }
-  public getPostById(e: H3Event<EventHandlerRequest>) {
-    const params = getRouterParams(e);
-    const dataList: any[] = postList();
-    console.log(dataList);
-    const post = dataList.find((item: any) => {
-      return params.id === item.id;
-    });
-    if (!post) {
-      return `<h2>Post with id of ${params.id} does not exist :(</h2>`;
+  public async getAllpost(e: H3Event) {
+    // @route GET /post
+    const allPost = await Post.find({}).sort({ date: -1 })
+
+    if (!allPost) {
+      throw createError({
+        status: 404,
+        message: 'Not found',
+        statusMessage: 'Post not found',
+      })
     }
-    return post;
+  }
+  public async getPostById(e: H3Event) {
+    // @route GET /post/:id
+    const postId = getRouterParam(e, 'id')
+    const post = await Post.findById(postId)
+
+    if (!post) {
+      throw createError({
+        status: 404,
+        message: 'Not found',
+        statusMessage: 'Cannot find post with corresponding id',
+      })
+    }
+    return post
   }
 }
