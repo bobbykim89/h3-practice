@@ -26,7 +26,7 @@ export class AuthController {
     }
   }
   public async loginUser(e: H3Event) {
-    const body = readValidatedBody(e, (body) => {
+    const body = await readValidatedBody(e, (body) => {
       if (!body) {
         throw createError({
           status: 403,

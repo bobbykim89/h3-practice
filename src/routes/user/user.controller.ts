@@ -15,7 +15,7 @@ import { UserInput } from './dto'
 export class UserController {
   public async signupUser(e: H3Event) {
     //   validate body
-    const body = readValidatedBody(e, (body) => {
+    const body = await readValidatedBody(e, (body) => {
       if (!body) {
         throw createError({
           status: 403,
