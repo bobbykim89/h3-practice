@@ -44,3 +44,7 @@ export const uploadCloudinary = async (e: H3Event, key: string = 'image') => {
 
   e.context.file = { imageId: public_id, image: secure_url }
 }
+
+export const deleteCloudinaryImage = async (id: string): Promise<void> => {
+  await cloudinary.uploader.destroy(id)
+}

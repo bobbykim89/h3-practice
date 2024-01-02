@@ -1,17 +1,14 @@
 import {
   H3Event,
-  EventHandlerRequest,
-  getRouterParams,
   createError,
   getRouterParam,
-  readMultipartFormData,
-  getRequestHeader,
-  getRequestHeaders,
-  readBody,
-  MultiPartData,
   readValidatedBody,
+  setResponseStatus,
+  getResponseStatus,
+  getResponseStatusText,
 } from 'h3'
-import { Post, User } from '@/model'
+import { Post, User, Comment } from '@/model'
+import { deleteCloudinaryImage } from '@/middleware'
 import { PutPostInput } from './dto'
 
 export class PostController {
@@ -130,5 +127,68 @@ export class PostController {
     })
 
     return updatedPost
+  }
+  public async deletePostById(e: H3Event) {
+    const user = e.context.user
+    const postId = getRouterParam(e, 'id')
+    const currentUser = await User.findById(user.id).select('-password')
+    if (!currentUser) {
+      throw createError({
+        status: 404,
+        message: 'Access denied',
+        statusMessage: 'Access denied: user not found',
+      })
+    }
+    const post = await Post.findById(postId)
+    // check if post exists
+    if (!post) {
+      throw createError({
+        status: 404,
+        message: 'Not found',
+        statusMessage: 'Not found: post not found',
+      })
+    }
+    // make sure user is authorized
+    if (post.author?.toString() !== currentUser.id || !currentUser.admin) {
+      throw createError({
+        status: 401,
+        message: 'Unauthorized',
+        statusMessage:
+          'Unauthorized: current user is not authorized for this action.',
+      })
+    }
+    // delete comments related to comment
+    const comments = await Comment.find({ post: postId })
+    try {
+      await Comment.deleteMany({ post: postId })
+    } catch (err) {
+      throw createError({
+        status: 500,
+        message: 'Internal server error',
+        statusMessage:
+          'Internal server error: unexpected error happened, please try again.',
+      })
+    }
+    // delete cloudinary image
+    await deleteCloudinaryImage(post.imageId)
+    // delete post
+    try {
+      await Post.findByIdAndDelete(postId)
+    } catch (err) {
+      throw createError({
+        status: 500,
+        message: 'Internal server error',
+        statusMessage:
+          'Internal server error: unexpected error happened, please try again.',
+      })
+    }
+    // send message after deletion completed
+    setResponseStatus(e, 200, 'Successfuly deleted the post.')
+    const status = getResponseStatus(e)
+    const statusText = getResponseStatusText(e)
+    return {
+      status,
+      text: statusText,
+    }
   }
 }

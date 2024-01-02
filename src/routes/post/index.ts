@@ -42,3 +42,10 @@ export const postRouter = createRouter()
       handler: defineEventHandler(postController.updatePost),
     })
   )
+  .delete(
+    '/post/:id',
+    defineEventHandler({
+      onRequest: [checkAuth],
+      handler: defineEventHandler(postController.deletePostById),
+    })
+  )

@@ -1,29 +1,29 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
-  mode: "production",
-  target: "node",
-  entry: path.resolve(__dirname, "src/index.ts"),
+  mode: 'production',
+  target: 'node',
+  entry: path.resolve(__dirname, 'src/index.ts'),
   module: {
     rules: [
       {
         test: /\.ts$/,
-        use: "ts-loader",
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
     ],
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src/"),
+      '@': path.resolve(__dirname, 'src/'),
     },
-    extensions: [".ts", ".js"],
+    extensions: ['.ts', '.js'],
   },
   output: {
-    path: path.resolve(__dirname, "dist/"),
-    publicPath: "/",
-    filename: "main.js",
+    path: path.resolve(__dirname, 'dist/'),
+    publicPath: '/',
+    filename: 'main.js',
     clean: true,
   },
   optimization: {
@@ -31,4 +31,4 @@ module.exports = {
   },
   externalsPresets: { node: true },
   externals: [nodeExternals()],
-};
+}

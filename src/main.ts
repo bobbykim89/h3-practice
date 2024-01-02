@@ -1,13 +1,13 @@
 import { createApp, eventHandler } from 'h3'
 import { connectDB } from '@/config'
-import { userRouter, authRouter, postRouter } from '@/routes'
+import { userRouter, authRouter, postRouter, commentRouter } from '@/routes'
 
 const app = createApp()
 
 // Connect Database
 connectDB()
 
-app.use(postRouter).use(authRouter).use(userRouter)
+app.use(postRouter).use(authRouter).use(userRouter).use(commentRouter)
 // .use(
 //   '/',
 //   eventHandler(() => {
